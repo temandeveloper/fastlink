@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="<?php echo base_url(); ?>\asset\css\mystyle.css">
   </head>
   <body>
-    <div class="notif shadow-lg">
+    <!-- <div class="notif shadow-lg">
       <div class="notif-body1">
         <h2 class="notif-text">Hello</h2>
       </div>
@@ -16,7 +16,7 @@
         <h2 class="notif-text">World!</h2>
         <h2 class="notif-text">User</h2>
       </div>
-    </div>
+    </div> -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-header fixed-top shadow">
       <a href="/projekWebsite"><img src="<?php echo base_url(); ?>asset/images/mylogo.png" style="height: 45px;"></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

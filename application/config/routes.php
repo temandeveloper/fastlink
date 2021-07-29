@@ -2,6 +2,11 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 $route['article']= 'MainController/opennews';
 $route['article/all/(:any)']= 'MainController/getpage/$1';
+
+$route['createlink'] = 'MainController/createlink';
+$route['checklink'] = 'MainController/checklink';
+$route['(:any)'] = 'MainController/shortlink';
+
 $route['update/(:any)'] = 'MainController/update/$1';
 $route['editslide/(:any)'] = 'MainController/editslide/$1';
 $route['updateslide/(:any)'] = 'MainController/slideupdate/$1';
@@ -16,7 +21,6 @@ $route['article/(:any)'] = 'MainController/view/$1';
 $route['MainController/kembali-upload'] = 'MainController/kembaliUpload';
 $route['MainController/slideupdate/kembali-upload-slide'] = 'MainController/kembaliUploadSlide';
 $route['upload-news'] = 'MainController/uploadNews/$s';
-$route['(:any)'] = 'pages/view/$1';
 $route['default_controller'] = 'MainController/home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

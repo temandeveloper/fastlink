@@ -32,6 +32,17 @@ class MainController extends CI_Controller {
           $this->news_model->update_visitor();
         }
 
+        public function shortlink()
+        {
+          $datalink = str_replace("/","",$_SERVER['REQUEST_URI']);
+          $datalink = $this->news_model->getlinkshorten($datalink);
+          if(!empty($datalink)){
+            redirect($datalink[0]['linktext']);
+          }else{
+            redirect('/');
+          }
+        }
+
 
         public function opennews(){
           $data['article'] = $this->news_model->get_news_all();
@@ -230,6 +241,21 @@ class MainController extends CI_Controller {
               }
             //  $data['nama_santri'] = $data['santri_item']['nama_santri'];
               $this->load->view('pages/tabDashboard/edit_slide',$data);
+              }
+
+/*==================================== shorten link ===================================*/
+
+              public function checklink(){
+                  $taglink  = $_POST['taglink'];
+                  $response = $this->news_model->checklinkshorten($taglink);
+                  echo $response;
+              }
+
+              public function createlink(){
+                  $textlink = $_POST['textlink'];
+                  $taglink = $_POST['taglink'];
+                  $response = $this->news_model->insertshortenlink($textlink,$taglink);
+                  echo $response['status'];
               }
 
 }

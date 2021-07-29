@@ -142,5 +142,33 @@ class News_model extends CI_Model {
         return $row['data'] == TRUE;
         }
 ###############################---BATAS AMAN-----###############################
+      // insert shorten link
+      public function insertshortenlink($textlink,$taglink){
+          $tgllink = date('Y-m-d H:i:s');
+          try {
+              $this->db->query('
+                INSERT INTO data_shortenlink (linktext, linktag, linktanggal)
+                VALUES ("'.$textlink.'", "'.$taglink.'", "'.$tgllink.'");
+              ');
+              return [
+                  'status' => 200, 
+              ];
+          } catch (\Exception $e) {
+              return [
+                  'status' => 500, 
+              ];
+          }
+      }
 
+      public function checklinkshorten($tag)
+      {
+        $query = $this->db->query('SELECT * FROM data_shortenlink WHERE linktag = "'.trim($tag).'" ');
+        return empty($query->result()) ? 1 : 0;
+      }
+
+      public function getlinkshorten($tag)
+      {
+        $query = $this->db->query('SELECT linktext FROM data_shortenlink WHERE linktag = "'.trim($tag).'" ');
+        return $query->result_array();
+      }
 }

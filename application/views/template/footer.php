@@ -35,5 +35,6 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>asset/js/jqueryScroll.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>asset/bootstrap/js/popper.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>asset/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>asset/js/home.js"></script>
   </body>
 </html>
