@@ -5,33 +5,38 @@ $("#copylink").click(function(){
 $('#buatlink').click(function(){
     let textlink = $("#InputLink").val();
     let taglink = $("#InputTag").val();
-    $.ajax({
-        url     : "http://dev.mywebsite.yii/checklink",
-        type    : "post",
-        dataType: "json",
-        data    : {
-            taglink  : taglink,
-        },
-        success: function (result) {
-            if(result == 1){
-                $.ajax({
-                    url     : "http://dev.mywebsite.yii/createlink",
-                    type    : "post",
-                    dataType: "json",
-                    data    : {
-                        textlink    : textlink,
-                        taglink     : taglink,
-                    },
-                    success: function (result) {
-                        $("#outputLink").val("http://dev.mywebsite.yii/"+taglink);
-                        $("#hasilshortlink").slideDown("slow");
-                    }
-                });
-            }else{
-                alert("Tag link sudah digunakan!");
+    if(textlink.trim() != "" || taglink.trim() != ""){
+        $.ajax({
+            url     : "https://linkerid.herokuapp.com/checklink",
+            type    : "post",
+            dataType: "json",
+            data    : {
+                taglink  : taglink,
+            },
+            success: function (result) {
+                if(result == 1){
+                    $.ajax({
+                        url     : "https://linkerid.herokuapp.com/createlink",
+                        type    : "post",
+                        dataType: "json",
+                        data    : {
+                            textlink    : textlink,
+                            taglink     : taglink,
+                        },
+                        success: function (result) {
+                            $("#outputLink").val("https://linkerid.herokuapp.com/"+taglink);
+                            $("#hasilshortlink").slideDown("slow");
+                        }
+                    });
+                }else{
+                    alert("Tag link sudah digunakan!");
+                }
             }
-        }
-    }); 
+        }); 
+    }else{
+        alert("Link dan tag link tidak boleh kosong!");
+    }
+    
 });
 
 copytest = () => {
