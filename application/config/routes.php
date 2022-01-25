@@ -4,9 +4,9 @@ $route['article']= 'MainController/opennews';
 $route['article/all/(:any)']= 'MainController/getpage/$1';
 
 $route['createlink'] = 'MainController/createlink';
+$route['lst'] = 'MainController/livespeech';
 $route['checklink'] = 'MainController/checklink';
 $route['(:any)'] = 'MainController/shortlink';
-
 $route['update/(:any)'] = 'MainController/update/$1';
 $route['editslide/(:any)'] = 'MainController/editslide/$1';
 $route['updateslide/(:any)'] = 'MainController/slideupdate/$1';
