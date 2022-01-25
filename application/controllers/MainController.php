@@ -258,4 +258,8 @@ class MainController extends CI_Controller {
                   echo $response['status'];
               }
 
+              public function livespeech(){
+                  $this->load->view('pages/livespeech');
+              }
+
 }
