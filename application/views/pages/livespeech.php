@@ -66,19 +66,20 @@
         </div>
     </div>
     </section>
-
+    <script type="text/javascript" src="<?php echo base_url(); ?>asset/js/jquery.js"></script>
     <script>
+        $(document).ready(()=>{
+            console.log("test");
+        })
         const texts = document.querySelector(".texts");
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SpeechRecognition();
         recognition.interimResults = true;
 
         let p = document.createElement("p");
-
         recognition.addEventListener("result", (e) => {
             texts.appendChild(p);
             const text = Array.from(e.results).map((result) => result[0]).map((result) => result.transcript).join("");
-
             p.innerText = text;
             if (e.results[0].isFinal) {
                 if (text.includes("how are you")) {
@@ -102,8 +103,25 @@
                     console.log("opening youtube");
                     window.open("https://www.youtube.com/channel/UCdxaLo9ALJgXgOUDURRPGiQ");
                 }
-
-                p = document.createElement("p");
+                
+                $.ajax({
+                    url     : "https://linkerid.herokuapp.com/gettranslation",
+                    type    : "post",
+                    dataType: "json",
+                    data    : {
+                        source  : "en",
+                        target  : "id",
+                        text  : text,
+                    },
+                    success: function (result) {
+                        console.log(result,"returned transcript");
+                        p = document.createElement("p");
+                        p.classList.add("replay");
+                        p.innerText = result;
+                        texts.appendChild(p);
+                    }
+                }); 
+                
             }
 
         });

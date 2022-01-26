@@ -1,4 +1,6 @@
 <?php
+require_once ('./vendor/autoload.php');
+use \Statickidz\GoogleTranslate;
 class MainController extends CI_Controller {
 
         public function __construct()
@@ -239,7 +241,6 @@ class MainController extends CI_Controller {
               {
                       show_404();
               }
-            //  $data['nama_santri'] = $data['santri_item']['nama_santri'];
               $this->load->view('pages/tabDashboard/edit_slide',$data);
               }
 
@@ -260,6 +261,17 @@ class MainController extends CI_Controller {
 
               public function livespeech(){
                   $this->load->view('pages/livespeech');
+              }
+
+
+              public function gettranslation(){
+                $source = $_POST['source']; // asal bahasa
+                $target = $_POST['target']; // target bahasa
+                $text = $_POST['text']; //text
+
+                $trans = new GoogleTranslate();
+                $result = $trans->translate($source, $target, $text);
+                echo $result;
               }
 
 }
