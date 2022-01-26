@@ -265,9 +265,9 @@ class MainController extends CI_Controller {
 
 
               public function gettranslation(){
-                $source = $_POST['source']; // asal bahasa
-                $target = $_POST['target']; // target bahasa
-                $text = $_POST['text']; //text
+                $source = $_GET['source']; // asal bahasa
+                $target = $_GET['target']; // target bahasa
+                $text = $_GET['text']; //text
 
                 $trans = new GoogleTranslate();
                 $result = $trans->translate($source, $target, $text);

@@ -69,7 +69,7 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>asset/js/jquery.js"></script>
     <script>
         $(document).ready(()=>{
-            console.log("test");
+            console.log("jquery active");
         })
         const texts = document.querySelector(".texts");
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -103,25 +103,22 @@
                     console.log("opening youtube");
                     window.open("https://www.youtube.com/channel/UCdxaLo9ALJgXgOUDURRPGiQ");
                 }
-                
+
                 $.ajax({
                     url     : "https://linkerid.herokuapp.com/gettranslation",
-                    type    : "post",
-                    dataType: "json",
+                    type    : "get",
                     data    : {
                         source  : "en",
                         target  : "id",
-                        text  : text,
+                        text  : "good morning",
                     },
-                    success: function (result) {
-                        console.log(result,"returned transcript");
+                    complete: function (result) {
                         p = document.createElement("p");
                         p.classList.add("replay");
-                        p.innerText = result;
+                        p.innerText = result.responseText;
                         texts.appendChild(p);
                     }
                 }); 
-                
             }
 
         });
