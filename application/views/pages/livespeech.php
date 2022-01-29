@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link rel="stylesheet" href="<?php echo base_url(); ?>\asset\bootstrap\css\bootstrap.min.css">
 </head>
 <style>
     * {
@@ -62,6 +63,20 @@
     <h1>Live Speech <br>Translator [LST]</h1>
     <p>Experimantal 😎 Mode</p>
     <div class="container">
+        <label for="basic-url" style="color:white">Input Language Code</label>
+        <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Speech</span>
+            </div>
+            <input type="text" id="speech" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+        </div>
+        <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="">Translator</span>
+            </div>
+            <input type="text" class="form-control" id="source" placeholder="Source">
+            <input type="text" class="form-control" id="target" placeholder="Target">
+        </div>
         <div class="texts">
         </div>
     </div>
@@ -72,41 +87,38 @@
             console.log("jquery active");
         })
         const texts = document.querySelector(".texts");
+        let speechcode = $("#speech").val();
+        let sourcecode = $("#source").val();
+        let targetcode = $("#target").val();
+
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SpeechRecognition();
+        recognition.lang = speechcode;
         recognition.interimResults = true;
-
         let p = document.createElement("p");
         recognition.addEventListener("result", (e) => {
             texts.appendChild(p);
             const text = Array.from(e.results).map((result) => result[0]).map((result) => result.transcript).join("");
             p.innerText = text;
             if (e.results[0].isFinal) {
-                if (text.includes("how are you")) {
-                    p = document.createElement("p");
-                    p.classList.add("replay");
-                    p.innerText = "I am fine";
-                    texts.appendChild(p);
-                }
-                if (text.includes("what's your name") || text.includes("what is your name")) {
-                    p = document.createElement("p");
-                    p.classList.add("replay");
-                    p.innerText = "My Name is Cifar";
-                    texts.appendChild(p);
-                }
-
-                if (text.includes("open my YouTube")) {
-                    p = document.createElement("p");
-                    p.classList.add("replay");
-                    p.innerText = "opening youtube channel";
-                    texts.appendChild(p);
-                    console.log("opening youtube");
-                    window.open("https://www.youtube.com/channel/UCdxaLo9ALJgXgOUDURRPGiQ");
+                if (text.includes("system start")) {
+                    if(speechcode == "" || sourcecode == "" || targetcode == ""){
+                        p = document.createElement("p");
+                        p.classList.add("replay");
+                        p.innerText = "System LST is Denied, Please make sure your input code";
+                        texts.appendChild(p);
+                        return false;
+                    }else{
+                        p = document.createElement("p");
+                        p.classList.add("replay");
+                        p.innerText = "System LST is Started...";
+                        texts.appendChild(p);
+                    }
                 }
 
                 console.log("get api translate");
-                let source = encodeURIComponent("en");
-                let target = encodeURIComponent("id");
+                let source = encodeURIComponent(sourcecode);
+                let target = encodeURIComponent(targetcode);
                 let textto = encodeURIComponent(text);
                 
                 $.ajax({
@@ -120,8 +132,7 @@
                         texts.appendChild(p);
                     },
                     error : function(xhr, status, error){
-                        alert(xhr.responseText);
-                        console.log("Anomaly has been detected Code 501");
+                        console.log("System Translator Failed to Proses");
                     }
                 });
             }
