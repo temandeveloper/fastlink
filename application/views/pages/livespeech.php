@@ -134,7 +134,6 @@
                 }
 
                 if (text.includes("show language")) {
-                    recognition.lang = $("#target").val();
                     p = document.createElement("p");
                     p.classList.add("replay");
                     p.innerText = "Your Language is : "+recognition.lang;
@@ -143,7 +142,7 @@
                 }
 
                 if (text.includes("set language")) {
-                    recognition.lang = $("#target").val();
+                    recognition.lang = $("#speech").val();
                     p = document.createElement("p");
                     p.classList.add("replay");
                     p.innerText = "Language is change to : "+recognition.lang;
