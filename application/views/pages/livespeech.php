@@ -129,15 +129,26 @@
                         p.classList.add("replay");
                         p.innerText = "System LST is Started...";
                         texts.appendChild(p);
+                        return false;
                     }
                 }
 
-                if (text.includes("change language")) {
+                if (text.includes("show language")) {
+                    recognition.lang = $("#target").val();
+                    p = document.createElement("p");
+                    p.classList.add("replay");
+                    p.innerText = "Your Language is : "+recognition.lang;
+                    texts.appendChild(p);
+                    return false;
+                }
+
+                if (text.includes("set language")) {
                     recognition.lang = $("#target").val();
                     p = document.createElement("p");
                     p.classList.add("replay");
                     p.innerText = "Language is change to : "+recognition.lang;
                     texts.appendChild(p);
+                    return false;
                 }
 
                 console.log("get api translate");
