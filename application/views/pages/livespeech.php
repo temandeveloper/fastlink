@@ -107,6 +107,7 @@
                         p.classList.add("replay");
                         p.innerText = "System LST is Denied, Please make sure your input code";
                         texts.appendChild(p);
+                        alert("speechcode : "+speechcode+"; sourcecode : "+sourcecode+"; targetcode : "+targetcode);
                         return false;
                     }else{
                         p = document.createElement("p");
