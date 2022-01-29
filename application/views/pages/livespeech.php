@@ -59,8 +59,8 @@
 </style>
 <body>
     <section>
-    <h1>Speech<br> Recognition</h1>
-    <p>Available In Chrome😎 Only</p>
+    <h1>Live Speech <br>Translator [LST]</h1>
+    <p>Experimantal 😎 Mode</p>
     <div class="container">
         <div class="texts">
         </div>
@@ -104,21 +104,26 @@
                     window.open("https://www.youtube.com/channel/UCdxaLo9ALJgXgOUDURRPGiQ");
                 }
 
+                console.log("get api translate");
+                let source = encodeURIComponent("en");
+                let target = encodeURIComponent("id");
+                let textto = encodeURIComponent(text);
+                
                 $.ajax({
-                    url     : "https://linkerid.herokuapp.com/gettranslation",
-                    type    : "get",
-                    data    : {
-                        source  : "en",
-                        target  : "id",
-                        text  : "good morning",
-                    },
-                    complete: function (result) {
+                    url : "https://translate.googleapis.com/translate_a/single?client=gtx&dt=t&sl="+source+"&tl="+target+"&q="+textto,
+                    type: "get",
+                    success : function(result){
+                        console.log("result translate",result[0][0][0]);
                         p = document.createElement("p");
                         p.classList.add("replay");
-                        p.innerText = result.responseText;
+                        p.innerText = result[0][0][0];
                         texts.appendChild(p);
+                    },
+                    error : function(xhr, status, error){
+                        alert(xhr.responseText);
+                        console.log("Anomaly has been detected Code 501");
                     }
-                }); 
+                });
             }
 
         });
