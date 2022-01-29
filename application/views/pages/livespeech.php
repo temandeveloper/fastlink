@@ -87,9 +87,24 @@
             console.log("jquery active");
         })
         const texts = document.querySelector(".texts");
-        let speechcode = $("#speech").val();
-        let sourcecode = $("#source").val();
-        let targetcode = $("#target").val();
+        let speechcode = "";
+        let sourcecode = "";
+        let targetcode = "";
+
+        $("#speech").change(()=>{
+            speechcode = $("#speech").val();
+            console.log("speechcode",speechcode);
+        });
+
+        $("#source").change(()=>{
+            sourcecode = $("#source").val();
+            console.log("sourcecode",sourcecode);
+        });
+
+        $("#target").change(()=>{
+            targetcode = $("#target").val();
+            console.log("targetcode",targetcode);
+        });
 
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SpeechRecognition();
@@ -115,6 +130,14 @@
                         p.innerText = "System LST is Started...";
                         texts.appendChild(p);
                     }
+                }
+
+                if (text.includes("change language")) {
+                    recognition.lang = $("#target").val();
+                    p = document.createElement("p");
+                    p.classList.add("replay");
+                    p.innerText = "Language is change to : "+recognition.lang;
+                    texts.appendChild(p);
                 }
 
                 console.log("get api translate");
