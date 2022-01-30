@@ -105,6 +105,7 @@
         $("#speech").change(()=>{
             speechcode = $("#speech").val();
             $("#source").val(speechcode);
+            sourcecode = speechcode;
             console.log("speechcode",speechcode);
         });
 
@@ -155,12 +156,11 @@
             });
         };
 
+        getVoices();
+
         if (synth.onvoiceschanged !== undefined) {
             console.log("onvoiceschanged")
             synth.onvoiceschanged = getVoices;
-        }else{
-            console.log("getVoices")
-            getVoices();
         }
 
 
