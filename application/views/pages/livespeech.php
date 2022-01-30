@@ -74,9 +74,20 @@
             <div class="input-group-prepend">
                 <span class="input-group-text" id="">Translator</span>
             </div>
-            <input type="text" class="form-control" id="source" placeholder="Source">
+            <input type="text" class="form-control" id="source" placeholder="Source" disabled>
             <input type="text" class="form-control" id="target" placeholder="Target">
         </div>
+        <label for="formControlRange" style="color:white">Voice</label>
+        <select id="voice-select" class="form-control form-control-sm"></select>
+        <div class="input-group">
+            <label for="formControlRange" style="color:white">Rate</label>
+            <input type="range" class="form-control-range" id="rate" min="0" max="2" value="1" step="0.1">
+        </div>
+        <div class="input-group">
+            <label for="formControlRange" style="color:white">Pitch</label>
+            <input type="range" class="form-control-range" id="pitch" min="0" max="2" value="1" step="0.1">
+        </div>
+        
         <div class="texts">
         </div>
     </div>
@@ -93,6 +104,7 @@
 
         $("#speech").change(()=>{
             speechcode = $("#speech").val();
+            $("#source").val(speechcode);
             console.log("speechcode",speechcode);
         });
 
@@ -108,6 +120,50 @@
 
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SpeechRecognition();
+        const synth = window.speechSynthesis;
+
+        const textForm = document.querySelector('form');
+        const voiceSelect = document.querySelector('#voice-select');
+        const rate = document.querySelector('#rate');
+        const pitch = document.querySelector('#pitch');
+
+        //Browser identifier
+        // Firefox 1.0+
+        var isFirefox = typeof InstallTrigger !== 'undefined';
+
+        // Chrome 1+
+        var isChrome = !!window.chrome && !!window.chrome.webstore;
+        console.log("isFirefox",isFirefox)
+        console.log("isChrome",isChrome)
+
+        // Init voices array
+        let voices = [];
+
+        const getVoices = () => {
+        voices = synth.getVoices();
+
+            // Loop through voices and create an option for each one
+            voices.forEach(voice => {
+                // Create option element
+                const option = document.createElement('option');
+                // Fill option with voice and language
+                option.textContent = voice.name + '(' + voice.lang + ')';
+                // Set needed option attributes
+                option.setAttribute('data-lang', voice.lang);
+                option.setAttribute('data-name', voice.name);
+                voiceSelect.appendChild(option);
+            });
+        };
+
+        if (synth.onvoiceschanged !== undefined) {
+            console.log("onvoiceschanged")
+            synth.onvoiceschanged = getVoices;
+        }else{
+            console.log("getVoices")
+            getVoices();
+        }
+
+
         recognition.lang = speechcode;
         recognition.interimResults = true;
         let p = document.createElement("p");
@@ -164,9 +220,40 @@
                         p.classList.add("replay");
                         p.innerText = result[0][0][0];
                         texts.appendChild(p);
+
+                        // Get speak text
+                        const speakText = new SpeechSynthesisUtterance(result[0][0][0]);
+
+                        // Speak end
+                        speakText.onend = e => {
+                            console.log('Done speaking...');
+                        };
+
+                        // Speak error
+                        speakText.onerror = e => {
+                            console.error('Something went wrong');
+                            alert("error : "+e);
+                        };
+
+                        // Selected voice
+                        const selectedVoice = voiceSelect.selectedOptions[0].getAttribute('data-name');
+
+                        // Loop through voices
+                        voices.forEach(voice => {
+                            if (voice.name === selectedVoice) {
+                                speakText.voice = voice;
+                            }
+                        });
+
+                        // Set pitch and rate
+                        speakText.rate = rate.value;
+                        speakText.pitch = pitch.value;
+                        // Speak
+                        synth.speak(speakText);
                     },
                     error : function(xhr, status, error){
                         console.log("System Translator Failed to Proses");
+                        alert("error : "+error);
                     }
                 });
             }
