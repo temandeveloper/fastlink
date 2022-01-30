@@ -230,6 +230,14 @@
                     return false;
                 }
 
+                if (text.includes("who are you")) {
+                    p = document.createElement("p");
+                    p.classList.add("replay");
+                    p.innerText = "speech code : "+voiceSelect.selectedOptions[0].getAttribute('data-name');
+                    texts.appendChild(p);
+                    return false;
+                }
+
                 console.log("get api translate");
                 let source = encodeURIComponent(sourcecode);
                 let target = encodeURIComponent(targetcode);
