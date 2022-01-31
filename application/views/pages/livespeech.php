@@ -78,8 +78,8 @@
             <input type="text" class="form-control" id="target" placeholder="Target">
         </div>
         <label for="formControlRange" style="color:white">Voice</label>
-        <!-- <select id="voice-select" class="form-control form-control-sm"></select> -->
-        <select id="voice-select" class="form-control form-control-sm">
+        <select id="voice-select" class="form-control form-control-sm"></select>
+        <!-- <select id="voice-select" class="form-control form-control-sm">
             <option data-lang="en-US" data-name="Microsoft David - English (United States)">Microsoft David - English (United States)(en-US)</option>
             <option data-lang="en-US" data-name="Microsoft Mark - English (United States)">Microsoft Mark - English (United States)(en-US)</option>
             <option data-lang="en-US" data-name="Microsoft Zira - English (United States)">Microsoft Zira - English (United States)(en-US)</option>
@@ -101,7 +101,7 @@
             <option data-lang="zh-CN" data-name="Google 普通话（中国大陆）">Google 普通话（中国大陆）(zh-CN)</option>
             <option data-lang="zh-HK" data-name="Google 粤語（香港）">Google粤語（香港）(zh-HK)</option>
             <option data-lang="zh-TW" data-name="Google 國語（臺灣）">Google 國語（臺灣）(zh-TW)</option>
-        </select>
+        </select> -->
 
         <div class="input-group">
             <label for="formControlRange" style="color:white">Rate</label>
@@ -167,25 +167,25 @@
         const getVoices = () => {
         voices = synth.getVoices();
 
-            // // Loop through voices and create an option for each one
-            // voices.forEach(voice => {
-            //     // Create option element
-            //     const option = document.createElement('option');
-            //     // Fill option with voice and language
-            //     option.textContent = voice.name + '(' + voice.lang + ')';
-            //     // Set needed option attributes
-            //     option.setAttribute('data-lang', voice.lang);
-            //     option.setAttribute('data-name', voice.name);
-            //     voiceSelect.appendChild(option);
-            // });
+            // Loop through voices and create an option for each one
+            voices.forEach(voice => {
+                // Create option element
+                const option = document.createElement('option');
+                // Fill option with voice and language
+                option.textContent = voice.name + '(' + voice.lang + ')';
+                // Set needed option attributes
+                option.setAttribute('data-lang', voice.lang);
+                option.setAttribute('data-name', voice.name);
+                voiceSelect.appendChild(option);
+            });
         };
 
         getVoices();
 
-        // if (synth.onvoiceschanged !== undefined) {
-        //     console.log("onvoiceschanged")
+        if (synth.onvoiceschanged !== undefined) {
+            console.log("onvoiceschanged")
             synth.onvoiceschanged = getVoices;
-        // }
+        }
 
 
         recognition.lang = speechcode;
