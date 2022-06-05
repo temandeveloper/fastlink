@@ -120,6 +120,10 @@
             statuscon = "client"; //penanda kalo dia client
             call.on("stream", stream => {
                 console.log("generate element caller1");
+                //break row
+                if(($(".videobox").length % 3) === 0){
+                    $("#videostreambox").append("<div class='w-100'></div>");
+                }
                 $("#videostreambox").append("<div class='col-lg'><video id='"+idelm+"' class='videobox' ></video></div>");
                 const remoteVideo = document.getElementById(idelm);
                 remoteVideo.srcObject = stream;
@@ -136,6 +140,10 @@
             call.answer(dataStream);
             call.on("stream", stream => {
                 console.log("generate element caller2");
+                //break row
+                if(($(".videobox").length % 3) === 0){
+                    $("#videostreambox").append("<div class='w-100'></div>");
+                }
                 $("#videostreambox").append("<div class='col-lg'><video id='"+idelm+"' class='videobox' ></video></div>");
                 const remoteVideo = document.getElementById(idelm);
                 remoteVideo.srcObject = stream;
@@ -210,6 +218,10 @@
                             var idelm = item+"-remoteid";
                             call.on("stream", stream => {
                                 console.log("generate element :");
+                                //break row
+                                if(($(".videobox").length % 3) === 0){
+                                    $("#videostreambox").append("<div class='w-100'></div>");
+                                }
                                 $("#videostreambox").append("<div class='col-lg'><video id='"+idelm+"' class='videobox'></video></div>");
                                 const remoteVideo = document.getElementById(idelm);
                                 remoteVideo.srcObject = stream;
