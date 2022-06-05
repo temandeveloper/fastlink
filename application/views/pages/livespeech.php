@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Group Call V0.2</title>
+    <title>Group Call V0.3</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 </head>
 <body>
@@ -38,12 +38,19 @@
 
         <div class="row" id="videostreambox">
             <div class="col-lg">
-                <video id="localVideo" width="100%"></video>
+                <video id="localVideo" class="videobox"></video>
             </div>
         </div>
         <div class="texts">
         </div>
     </div>
+    <style>
+        .videobox {
+            width:100%; 
+            height:90%; 
+            object-fit: cover;
+        }
+    </style>
     <script src="https://unpkg.com/peerjs@1.4.5/dist/peerjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script>
@@ -57,6 +64,7 @@
         const speechcode = document.getElementById("speechcode");
         const texts = document.querySelector(".texts");
         let usersconnect = [];
+        let statuscon = "";
 
         //========================= CODE VOICE RECOGNITION ===================//
 
@@ -68,7 +76,7 @@
             const text = Array.from(e.results).map((result) => result[0]).map((result) => result.transcript).join("");
             console.log("Recognition Processing");
             console.log("Fadil : "+text);
-            // if (e.results[0].isFinal) {
+            if (e.results[0].isFinal) {
                 console.log(text);
                 console.log(usersconnect);
                 usersconnect.forEach(function(item, index){
@@ -80,7 +88,7 @@
                         conn.send(item+" : "+text);
                     });
                 });
-            // }
+            }
         });
 
         recognition.addEventListener("end", () => {
@@ -109,9 +117,10 @@
             usersconnect.push(remotePeerId);
             const call = peer.call(remotePeerId, dataStream);
             var idelm = remotePeerId+"-remoteid";
+            statuscon = "client"; //penanda kalo dia client
             call.on("stream", stream => {
                 console.log("generate element caller1");
-                $("#videostreambox").append("<div class='col-lg'><video id='"+idelm+"' width='100%'></video></div>");
+                $("#videostreambox").append("<div class='col-lg'><video id='"+idelm+"' class='videobox' ></video></div>");
                 const remoteVideo = document.getElementById(idelm);
                 remoteVideo.srcObject = stream;
                 remoteVideo.onloadedmetadata = () => remoteVideo.play();
@@ -122,17 +131,47 @@
         peer.on("call", call => {
             let idpemanggil = call.peer;
             console.log("insert id : "+idpemanggil);
-            usersconnect.push(idpemanggil);
             var idelm = idpemanggil+"-remoteid";
             console.log("caller :",call.peer);
             call.answer(dataStream);
             call.on("stream", stream => {
                 console.log("generate element caller2");
-                $("#videostreambox").append("<div class='col-lg'><video id='"+idelm+"' width='100%'></video></div>");
+                $("#videostreambox").append("<div class='col-lg'><video id='"+idelm+"' class='videobox' ></video></div>");
                 const remoteVideo = document.getElementById(idelm);
                 remoteVideo.srcObject = stream;
                 remoteVideo.onloadedmetadata = () => remoteVideo.play();
             })
+
+            if(statuscon != "client"){
+                if(usersconnect.length !== 0){
+                    console.log('broadcast all user connect :'+usersconnect.length);
+                    console.log(usersconnect);
+                    usersconnect.forEach(function(item, index){
+                        var conn = peer.connect(item);
+                        conn.on('open', function() {
+                            // Send messages
+                            conn.send({
+                                status: 'broadcast',
+                                userid: idpemanggil,
+                            });
+                        });
+                    });
+
+                    console.log('send all users connect to new user connect');
+                    var conn = peer.connect(idpemanggil);
+                    conn.on('open', function() {
+                        // Send messages
+                        conn.send({
+                            status: 'alluserconnect',
+                            userid: usersconnect,
+                        });
+                    });
+
+                    usersconnect.push(idpemanggil);
+                }else{
+                    usersconnect.push(idpemanggil);
+                }
+            }
         });
 
         //========================== CODE CHAT =============================//
@@ -143,7 +182,6 @@
                 var conn = peer.connect(item);
                 const massage = pesanText.value;
                 // Send messages
-                conn.send('this massage is Hello!');
                 console.log('try to send massage');
                 conn.on('open', function() {
                     // Send messages
@@ -154,13 +192,36 @@
 
         //kode untuk menerima pesan
         peer.on('connection', function(con){
-            console.log("check connection : "+con.id);
-            console.log("check connection :");
             console.log("this connection ",con);
             con.on('data', function(data){
-                console.log("check data :");
-                console.log('Incoming data is ', data);
-                con.send('REPLY');
+                console.log('Incoming data is :');
+                console.log(data);
+                if(data.status == "broadcast"){
+                    const call = peer.call(data.userid, dataStream);
+                    var idelm = data.userid+"-remoteid";
+                    call.on("stream", stream => {
+                        console.log("generate element :");
+                        $("#videostreambox").append("<div class='col-lg-3'><video id='"+idelm+"' class='videobox'></video></div>");
+                        const remoteVideo = document.getElementById(idelm);
+                        remoteVideo.srcObject = stream;
+                        remoteVideo.onloadedmetadata = () => remoteVideo.play();
+                    });
+                }else if (data.status == "alluserconnect"){
+                    usersconnect = data.userid;
+                    console.log("generate all new user :"+usersconnect.length);
+                    console.log(usersconnect);
+                    usersconnect.forEach(function(item, index){
+                        const call = peer.call(item, dataStream);
+                        var idelm = item+"-remoteid";
+                        call.on("stream", stream => {
+                            console.log("generate element :");
+                            $("#videostreambox").append("<div class='col-lg-3'><video id='"+idelm+"' class='videobox'></video></div>");
+                            const remoteVideo = document.getElementById(idelm);
+                            remoteVideo.srcObject = stream;
+                            remoteVideo.onloadedmetadata = () => remoteVideo.play();
+                        });
+                    });
+                }
             });
         });
 
