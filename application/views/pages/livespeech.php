@@ -68,7 +68,7 @@
             const text = Array.from(e.results).map((result) => result[0]).map((result) => result.transcript).join("");
             console.log("Recognition Processing");
             console.log("Fadil : "+text);
-            if (e.results[0].isFinal) {
+            // if (e.results[0].isFinal) {
                 console.log(text);
                 console.log(usersconnect);
                 usersconnect.forEach(function(item, index){
@@ -80,7 +80,7 @@
                         conn.send(item+" : "+text);
                     });
                 });
-            }
+            // }
         });
 
         recognition.addEventListener("end", () => {
