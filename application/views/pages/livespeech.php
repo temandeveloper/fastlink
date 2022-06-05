@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Group Call V0.3</title>
+    <title>Group Call V0.35</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 </head>
 <body>
@@ -114,7 +114,7 @@
 
         btnCall.addEventListener("click", function(){
             const remotePeerId = remoteId.value;
-            usersconnect.push(remotePeerId);
+            // usersconnect.push(remotePeerId);
             const call = peer.call(remotePeerId, dataStream);
             var idelm = remotePeerId+"-remoteid";
             statuscon = "client"; //penanda kalo dia client
@@ -196,16 +196,10 @@
             con.on('data', function(data){
                 console.log('Incoming data is :');
                 console.log(data);
+
                 if(data.status == "broadcast"){
-                    const call = peer.call(data.userid, dataStream);
-                    var idelm = data.userid+"-remoteid";
-                    call.on("stream", stream => {
-                        console.log("generate element :");
-                        $("#videostreambox").append("<div class='col-lg-3'><video id='"+idelm+"' class='videobox'></video></div>");
-                        const remoteVideo = document.getElementById(idelm);
-                        remoteVideo.srcObject = stream;
-                        remoteVideo.onloadedmetadata = () => remoteVideo.play();
-                    });
+                    usersconnect.push(data.userid);
+                    console.log('user incomming : '+data.userid);
                 }else if (data.status == "alluserconnect"){
                     usersconnect = data.userid;
                     console.log("generate all new user :"+usersconnect.length);
@@ -215,7 +209,7 @@
                         var idelm = item+"-remoteid";
                         call.on("stream", stream => {
                             console.log("generate element :");
-                            $("#videostreambox").append("<div class='col-lg-3'><video id='"+idelm+"' class='videobox'></video></div>");
+                            $("#videostreambox").append("<div class='col-lg'><video id='"+idelm+"' class='videobox'></video></div>");
                             const remoteVideo = document.getElementById(idelm);
                             remoteVideo.srcObject = stream;
                             remoteVideo.onloadedmetadata = () => remoteVideo.play();
