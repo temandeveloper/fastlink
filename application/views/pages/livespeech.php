@@ -35,7 +35,11 @@
               <button class="btn btn-outline-secondary" type="button" id="send-massage">Send</button>
             </div>
         </div>
-
+        <div class="input-group mb-3">
+            <button type="button" id="audioact" style="margin-right: 10px;" class="btn btn-info">Audio</button>
+            <button type="button" id="camact" class="btn btn-info">Camera</button>
+        </div>
+        
         <div class="row" id="videostreambox">
             <div class="col-lg">
                 <video id="localVideo" class="videobox"></video>
@@ -70,7 +74,7 @@
 
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SpeechRecognition();
-        recognition.lang = "id";
+        recognition.lang = "ja";
         recognition.interimResults = true;
         recognition.addEventListener("result", (e) => {
             const text = Array.from(e.results).map((result) => result[0]).map((result) => result.transcript).join("");
@@ -96,14 +100,27 @@
         });
         recognition.start();
 
+        
+
 
         //========================== CODE STREAM =============================//
 
-        navigator.mediaDevices.getUserMedia({video : true}).then( stream => {
+        navigator.mediaDevices.getUserMedia({audio: true, video: true}).then( stream => {
             dataStream = stream;
             const localVideoStream = document.getElementById("localVideo");
-            localVideoStream.srcObject = dataStream;
+            localVideoStream.srcObject = stream;
             localVideoStream.onloadedmetadata = () => localVideoStream.play();
+
+            $("#camact").click(function(){
+                // console.log(stream.getVideoTracks()[0].enabled);
+                stream.getVideoTracks()[0].enabled = !stream.getVideoTracks()[0].enabled;
+            });
+
+             $("#audioact").click(function(){
+                // console.log(stream.getVideoTracks()[0].enabled);
+                stream.getAudioTracks()[0].enabled = !stream.getAudioTracks()[0].enabled;
+            });
+
         });
 
         //this code is similarity of document ready on javascript
